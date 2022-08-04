@@ -1,0 +1,7 @@
+{
+  "firstName": "Hans",
+  "lastName": "AbcAbc",
+  "nationalIdentificationNumber":  "some_valid_cnp",
+  "country":"DE",
+  "expiryDate": "2030-12-31"
+}
