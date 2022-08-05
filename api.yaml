@@ -1,0 +1,92 @@
+openapi: "3.0.2"
+info:
+  title: The API for technical challenge employee enrollment (check).
+  version: "1.0"
+servers:
+  - url: "https://to_be_replaced_with_the_real_url.ro"
+
+# @Reviewer@ -> some sort of security headers should be in place for all endpoints - but it is outside the scope of the challenge.
+paths:
+  /enrollment/check:
+    post:
+      summary: Post the info from an ID Document to check if the person is eligible for enrollment.
+      requestBody:
+        description: "The data from the ID Document of the customer to be enrolled"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDDocument'
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerCheckResult'
+
+  /enrollment/document:
+    get:
+      summary: Returns the document for enrollment or denial in .pdf format
+      responses:
+        '200':
+          description: the .pdf document
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+    post:
+      summary: The endpoint for uploading the signed enrollment/denial document to the system.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                signedDocument:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Created
+
+
+components:
+  schemas:
+    IDDocument:
+      # @Reviewer@ -> The ID Document has other information that might be relevant for the enrollment process, but I considered them out of the scope of the API described in the challenge - f.e. date of birth, correspondence address etc.
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nationalIdentificationNumber:
+          description: "This is the CNP for Romanian residents or citizens. For other countries it is the personal identification number of the person in their country. For more info check https://en.wikipedia.org/wiki/National_identification_number"
+          type: string
+        country:
+          description: "The country in which the person can be uniquely identified with their National Identification Number"
+          type: string
+        expiryDate:
+          description: "Expiration date of the document"
+          type: string
+          format: date
+          example: "2030-01-31"
+      required:
+        - firstName
+        - lastName
+        - nationalIdentificationNumber
+        - country
+        - expiryDate
+
+    CustomerCheckResult:
+      type: object
+      properties:
+        isEligible:
+          type: boolean
+        reasonForDenial:
+          type: string
+      required:
+        - isEligible

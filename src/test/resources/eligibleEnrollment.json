@@ -1,0 +1,7 @@
+{
+  "firstName": "Maria",
+  "lastName": "Popescu",
+  "nationalIdentificationNumber":  "some_valid_cnp",
+  "country":"BE",
+  "expiryDate": "2030-12-31"
+}
